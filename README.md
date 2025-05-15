@@ -14,6 +14,6 @@ After cloning this repo, follow the steps below to run the project! Note that yo
 - `python -m venv .venv` to create a virtual environment
 - `source .venv/bin/activate` to activate the virtual environment (for Windows PowerShell, run `.venv\Scripts\Activate.ps1` instead)
 - `pip install -r requirements.txt`
-- Create a file `.env` in `/backend` that follows the format specified in `.env.example`. Ask a dev lead for the environment variable values
+- Create a file `.env` in `/backend` that follows the format specified in `.env.example`. Ask a dev lead for the environment variable values.
 - `fastapi dev main.py`
 - That's it! Your backend should be running at http://localhost:8000!
