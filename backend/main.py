@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Response, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from auth_utils import set_auth_cookies, clear_auth_cookies, get_current_user
 from db import supabase
+from pydantic import BaseModel
 
 app = FastAPI()
 app.add_middleware(
@@ -11,7 +12,6 @@ app.add_middleware(
   allow_methods=["*"],
   allow_headers=["*"],
 )
-
 
 @app.get("/")
 async def root():
@@ -56,3 +56,37 @@ async def me(user = Depends(get_current_user)):
 @app.get("/protected")
 async def protected(user = Depends(get_current_user)):
   return {"secret": "only for " + user.email}
+
+# Pydantic model for quiz results 
+class QuizResults(BaseModel):
+    roles: list[str]
+    companies: list[str]
+    locations: list[str]
+    education_level: str
+    experience_level: str
+    college: str
+    hobbies: list[str]
+
+# Accessing quiz results
+@app.post("/results")
+async def accept_quiz_results(results: QuizResults):
+    roles = results.roles
+    companies = results.companies
+    locations = results.locations
+    education_level = results.education_level
+    experience_level = results.experience_level
+    college = results.college
+    hobbies = results.hobbies
+
+    # Parsing quiz results into easy to access
+    parsed_data = {
+        "roles": roles,
+        "companies": companies,
+        "locations": locations,
+        "education_level": education_level,
+        "experience_level": experience_level,
+        "college": college,
+        "hobbies": hobbies,
+    }
+
+    return {"parsed data": parsed_data}
