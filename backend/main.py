@@ -2,6 +2,20 @@ from fastapi import FastAPI, Request, Response, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from auth_utils import set_auth_cookies, clear_auth_cookies, get_current_user
 from db import supabase
+from pydantic import BaseModel
+import requests
+import aiohttp
+from dotenv import load_dotenv
+import os
+from google import genai
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+client = genai.Client(api_key=GEMINI_API_KEY)
+
+
 
 app = FastAPI()
 app.add_middleware(
@@ -56,3 +70,51 @@ async def me(user = Depends(get_current_user)):
 @app.get("/protected")
 async def protected(user = Depends(get_current_user)):
   return {"secret": "only for " + user.email}
+
+#fetch career path from sample json
+
+
+#input for the career search
+class UserData(BaseModel):
+    age: int
+    education: str
+    current_title: str
+    location: str
+    skills: list[str]
+
+async def fetch_similar_profiles(user_data: UserData):
+  query =  f"find profiles with the title '{user_data.current_title}', with education path like '{user_data.education}'"
+  url = "https://search.linkd.inc/api/search/users"
+  querystring = {"limit":"10","acceptance_threshold":"60","query":query}
+  headers = {"Authorization": "Bearer lk_ceeac7b5f0b04b2cbf8e9fa7ef02219c"}
+  response = requests.request("GET", url, headers=headers, params=querystring)
+
+async def generate_career_path(user_data: UserData, profiles: dict):
+    try:
+        amount = 3
+        prompt = f"""
+        Generate {amount} career paths for this user:
+        - Age: {user_data.age}
+        - Education: {user_data.education}
+        - Current Title: {user_data.current_title}
+        - Location: {user_data.location}
+        - Skills: {', '.join(user_data.skills)}
+        Use the following similar profiles to guide the path: {profiles}
+        """
+
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
+        return {"career_path": response.text}
+
+    except Exception as e:
+        print("Gemini SDK Error:", str(e))
+        raise HTTPException(status_code=500, detail="Gemini API failed")
+
+  
+@app.post("/generate-career-path")
+async def generate_path(user_data: UserData):
+    profiles = await fetch_similar_profiles(user_data)
+    career_path = await generate_career_path(user_data, profiles)
+    return {"career_path": career_path}
