@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from auth_utils import set_auth_cookies, clear_auth_cookies, get_current_user
 from db import supabase
 from pydantic import BaseModel
+import requests
 
 app = FastAPI()
 app.add_middleware(
