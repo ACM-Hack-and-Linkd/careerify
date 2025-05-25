@@ -229,7 +229,7 @@ const MultiStepFormPage: React.FC = () => {
               <label className="form-label">Education</label>
               <input
                 type="text"
-                name="College/University"
+                name="education"
                 value={formData.education}
                 placeholder="Enter your College/University"
                 onChange={handleInputChange}
