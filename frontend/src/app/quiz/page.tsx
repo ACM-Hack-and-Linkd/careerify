@@ -229,22 +229,29 @@ const MultiStepFormPage: React.FC = () => {
               <label className="form-label">Education</label>
               <input
                 type="text"
-                name="education"
+                name="College/University"
                 value={formData.education}
+                placeholder="Enter your College/University"
                 onChange={handleInputChange}
                 className="form-input"
               />
               {errors.education && <div className="form-error">{errors.education}</div>}
             </div>
             <div className="form-group">
-              <label className="form-label">Degree</label>
-              <input
-                type="text"
+              <label className="form-label">Highest Degree</label>
+              <select
                 name="degree"
                 value={formData.degree}
                 onChange={handleInputChange}
                 className="form-input"
-              />
+              >
+                <option value="">Degree</option>
+                <option value="High School Diploma">High School Diploma</option>
+                <option value="Associate">Associate</option>
+                <option value="Bachelors">Bachelors</option>
+                <option value="Masters">Masters</option>
+                <option value="Doctoral">Doctoral</option>
+              </select>
               {errors.degree && <div className="form-error">{errors.degree}</div>}
             </div>
           </div>
