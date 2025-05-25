@@ -1,0 +1,151 @@
+.form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.step.active {
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.step.completed {
+  color: #4caf50;
+}
+
+.step-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: 0;
+}
+
+.form-step {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.form-error {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button-primary {
+  background-color: #1976d2;
+  color: white;
+}
+
+.button-primary:hover {
+  background-color: #1565c0;
+}
+
+.button-secondary {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.button-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.skill-chip {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.skill-chip button {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.2rem;
+}
+
+.skill-chip button:hover {
+  color: #1565c0;
+} 
