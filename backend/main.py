@@ -69,10 +69,11 @@ class QuizResults(BaseModel):
     experience_level: str
     college: str
     hobbies: list[str]
+    limit: int 
 
 # Accessing quiz results
 @app.post("/results")
-async def accept_quiz_results(results: QuizResults):
+async def accept_quiz_results(results: QuizResults): #user = Depends(get_current_user)): #user makes route protected, can be removed for testing
     roles = results.roles
     companies = results.companies
     locations = results.locations
@@ -80,6 +81,7 @@ async def accept_quiz_results(results: QuizResults):
     experience_level = results.experience_level
     college = results.college
     hobbies = results.hobbies
+    limit = results.limit
 
     # Parsing quiz results into easy to access
     parsed_data = {
@@ -90,6 +92,7 @@ async def accept_quiz_results(results: QuizResults):
         "experience_level": experience_level,
         "college": college,
         "hobbies": hobbies,
+        "limit": limit
     }
 
     return {"parsed data": parsed_data}
@@ -102,7 +105,7 @@ async def link_api_call(query_string: str):
   response = requests.request("GET", url, params=params, headers=headers)
   return response.json()
 
-print(asyncio.run(link_api_call("UCLA alumni working at oracle")))
+
 
 
 
