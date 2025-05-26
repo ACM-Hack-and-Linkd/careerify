@@ -4,7 +4,6 @@ from auth_utils import set_auth_cookies, clear_auth_cookies, get_current_user
 from db import supabase
 from pydantic import BaseModel
 import requests
-import asyncio
 import os
 
 app = FastAPI()
@@ -95,15 +94,23 @@ async def accept_quiz_results(results: QuizResults): #user = Depends(get_current
         "limit": limit
     }
 
-    return {"parsed data": parsed_data}
+    querystring = "Find users that take these parameters: roles, companies, locations, education_level, experience_level, college, hobbies. If not applicable, do not take that specific parameter into account." + "Roles: " + " ".join(parsed_data["roles"]) + ", Companies: " + " ".join(parsed_data["companies"]) + ", Locations: " + " ".join(parsed_data["locations"]) + ", Education Level: " + parsed_data["education_level"] + ", Experience Level: " + parsed_data["experience_level"] + ", College: " + parsed_data["college"] + ", Hobbies: " + " ".join(parsed_data["hobbies"])
+    profiles = await linkd_api_call(querystring)
+    return profiles
 
-async def link_api_call(query_string: str):
+async def linkd_api_call(query_string: str):
   url = "https://search.linkd.inc/api/search/users"
   api_key = os.environ.get('API_KEY')
   headers = {"Authorization": "Bearer " + api_key}
   params = {"query": query_string, "limit": "10"}
   response = requests.request("GET", url, params=params, headers=headers)
-  return response.json()
+  response = response.json()
+  response = response["results"] #get list of profile objects
+  return response
+
+
+
+
 
 
 
