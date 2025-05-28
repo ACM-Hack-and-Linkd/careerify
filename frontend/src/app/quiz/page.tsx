@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { FormData, FormStep } from '../../types/form';
+import SideBar from '@/components/sideBar';
 import '../../styles/Form.css';
 
 const steps = [
@@ -337,51 +338,60 @@ const MultiStepFormPage: React.FC = () => {
   };
 
   return (
-    <div className="form-container">
-      <h1 className="form-title">Multi-Step Form</h1>
-      
-      <div className="steps-container">
-        <div className="step-line" />
-        {steps.map((step, index) => (
-          <div
-            key={step}
-            className={`step ${index + 1 === currentStep ? 'active' : ''} ${
-              index + 1 < currentStep ? 'completed' : ''
-            }`}
-          >
-            {step}
-          </div>
-        ))}
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        {renderStep()}
-        
-        <div className="button-group">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="button button-secondary"
-            disabled={currentStep === 1}
-          >
-            Back
-          </button>
+    <div className="big-container">
+      <aside className="h-screen sticky p-4 top-0 w-45 border-b border-b-gray-100 shadow-sm h-full"> 
+        <SideBar />
+      </aside>
+      <main className="w-full pr-4">
+        <div className="form-outer">
+        <div className="form-container">
+          <h1 className="form-title">Career Matching Quiz</h1>
           
-          {currentStep === 7 ? (
-            <button type="submit" className="button button-primary">
-              Submit
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleNext}
-              className="button button-primary"
-            >
-              Next
-            </button>
-          )}
+          <div className="steps-container">
+            <div className="step-line" />
+            {steps.map((step, index) => (
+              <div
+                key={step}
+                className={`step ${index + 1 === currentStep ? 'active' : ''} ${
+                  index + 1 < currentStep ? 'completed' : ''
+                }`}
+              >
+                {step}
+              </div>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            {renderStep()}
+            
+            <div className="button-group">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="button button-secondary"
+                disabled={currentStep === 1}
+              >
+                Back
+              </button>
+              
+              {currentStep === 7 ? (
+                <button type="submit" className="button button-primary">
+                  Submit
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="button button-primary"
+                >
+                  Next
+                </button>
+              )}
+            </div>
+          </form>
         </div>
-      </form>
+        </div>
+    </main>
     </div>
   );
 };

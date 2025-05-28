@@ -2,6 +2,7 @@
 
 import { request } from '@/app/lib/api';
 import { redirect } from 'next/navigation';
+import SideBar from '@/components/sideBar';
 
 export default function Home() {
 
@@ -11,9 +12,10 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <h1>Careerify!</h1>
-      <button onClick={logout} className="cursor-pointer">Logout</button>
-    </main>
+    <div>
+      <aside className="h-screen sticky p-4 top-0 w-45 border-b border-b-gray-100 shadow-sm h-full"> 
+        <SideBar />
+      </aside>
+    </div>
   );
 }
