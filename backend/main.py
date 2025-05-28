@@ -7,15 +7,13 @@ import requests
 import aiohttp
 from dotenv import load_dotenv
 import os
-from google import genai
+import google.generativeai as genai
+from db import add_career_path
 
 load_dotenv()
-
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-client = genai.Client(api_key=GEMINI_API_KEY)
-
-
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 app = FastAPI()
 app.add_middleware(
@@ -25,7 +23,6 @@ app.add_middleware(
   allow_methods=["*"],
   allow_headers=["*"],
 )
-
 
 @app.get("/")
 async def root():
@@ -86,10 +83,11 @@ async def fetch_similar_profiles(user_data: UserData):
   query =  f"find profiles with the title '{user_data.current_title}', with education path like '{user_data.education}'"
   url = "https://search.linkd.inc/api/search/users"
   querystring = {"limit":"10","acceptance_threshold":"60","query":query}
-  headers = {"Authorization": "Bearer lk_ceeac7b5f0b04b2cbf8e9fa7ef02219c"}
+  headers = {"Authorization": "Bearer lk_26b58cb966d34b46b9837f5612767edd"}
   response = requests.request("GET", url, headers=headers, params=querystring)
 
 async def generate_career_path(user_data: UserData, profiles: dict):
+    response = None
     try:
         amount = 3
         prompt = f"""
@@ -102,19 +100,22 @@ async def generate_career_path(user_data: UserData, profiles: dict):
         Use the following similar profiles to guide the path: {profiles}
         """
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
-        )
-        return {"career_path": response.text}
+        response = model.generate_content(prompt)
 
     except Exception as e:
         print("Gemini SDK Error:", str(e))
-        raise HTTPException(status_code=500, detail="Gemini API failed")
-
+        raise HTTPException(status_code=500, detail=f"Gemini API failed")
+    
+    entry_id, _ = await(add_career_path(user_data, response.text))
+    return {
+    "entry_id": entry_id,
+    "career_path": response.text
+    }
   
 @app.post("/generate-career-path")
 async def generate_path(user_data: UserData):
+    # response = model.generate_content("Say hello.")
+    # print(response.text)  
     profiles = await fetch_similar_profiles(user_data)
     career_path = await generate_career_path(user_data, profiles)
-    return {"career_path": career_path}
+    return {"user results": career_path}
