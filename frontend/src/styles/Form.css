@@ -1,16 +1,31 @@
 .form-container {
+  padding: 2rem;
   max-width: 800px;
-  margin: 2rem auto;
+  margin-top: 0;
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.big-container {
+    display: flex;
+    align-items: center;
+}
+
+.form-outer {
+  display: flex;
+  justify-content: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .form-title {
   text-align: center;
   color: #333;
   margin-bottom: 2rem;
+  font-weight: 500;
+  font-size: 30px
 }
 
 .steps-container {

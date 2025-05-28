@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image'
 import NetworkCard from '../../components/networkCard'
 import { profileCard } from '../../types/profile'
 import '../../styles/Matching.css'
+import SideBar from '@/components/sideBar';
 
 const MatchingPage: React.FC = () => {
 
@@ -51,14 +51,12 @@ const MatchingPage: React.FC = () => {
 
     return(
         <div className="big-container">
-          <aside className="h-screen sticky p-4 top-0 w-40 border-b border-b-gray-100 shadow-sm h-full"> 
-            <h4>Careerify</h4>
-            <div className='line'></div>
-            <Link href="/quiz">Quiz</Link>
-          </aside>
+            <aside className="h-screen sticky p-4 top-0 w-45 border-b border-b-gray-100 shadow-sm h-full"> 
+              <SideBar />
+            </aside>
           <main className="w-full p-4">
             <div className="matching-container">
-              <button className="mr-7" onClick={handleClick} disabled={disabled}>
+              <button className="match-button" onClick={handleClick} disabled={disabled}>
                 <Image 
                 src="/icons/no.svg"
                 alt="Swipe Left"
@@ -76,7 +74,7 @@ const MatchingPage: React.FC = () => {
                       image_src={dummyData[profIndex].image_src}
                   />
                 </div>
-                <button className="ml-7" onClick={handleClick} disabled={disabled}>
+                <button className="match-button" onClick={handleClick} disabled={disabled}>
                   <Image 
                   src="/icons/yes.svg"
                   alt="Swipe Right"

@@ -9,19 +9,6 @@
     align-items: center;
 }
 
-aside {
-    background-color: #FF9000;
-    color: white;
-}
-
-aside .line {
-    width: 80%;
-    height: 1px;
-    background: white;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
 aside h4 {
     font-weight: 500;
     font-size: 30px;
@@ -33,4 +20,8 @@ main button {
 
 main button:disabled {
     cursor: default;
+}
+
+.match-button {
+    margin: 20px;
 }

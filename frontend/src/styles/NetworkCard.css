@@ -12,9 +12,11 @@
 
 .profile-image {
     border-radius: 50%;
-    margin-bottom: 1rem;
+    margin-bottom: 2.25rem;
     border: 5px solid #FF9000;
     background: #FF9000;
+    max-height: 185px;
+    max-width: 185px;
 }
 
 .prof-line {
@@ -25,13 +27,14 @@
     margin-bottom: 0.5rem;
 }
 
-.profile-card h2 {
+.profile-card-title {
     font-weight: 500;
     font-size: 30px;
 }
 
-.profile-card h4 {
+.profile-card-info {
     font-weight: 300;
+    font-size: 18px
 }
 
 .profile-card p {
