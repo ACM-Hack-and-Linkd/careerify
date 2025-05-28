@@ -1,8 +1,15 @@
 'use client';
 import Link from 'next/link'
 import '../styles/SideBar.css'
+import { request } from '@/app/lib/api';
+import { redirect } from 'next/navigation';
 
 const SideBar: React.FC = () => {
+
+    const logout = () => {
+        request('logout', 'DELETE');
+        redirect('/login');
+      };
 
     return (
     <div> 
@@ -16,6 +23,9 @@ const SideBar: React.FC = () => {
         <br />
         <br />
         <Link className="link" href="/profile">Connections</Link>
+        <br />
+        <br />
+        <Link className="link" href="/" onClick={logout}>Logout</Link>
     </div>
     )
 }
