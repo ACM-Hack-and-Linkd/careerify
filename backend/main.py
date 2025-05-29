@@ -3,18 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from auth_utils import set_auth_cookies, clear_auth_cookies, get_current_user
 from db import supabase
 from pydantic import BaseModel
+from pypdf import PdfReader
+
 import requests
 import aiohttp
 from dotenv import load_dotenv
 import os
-from google import genai
+import google.generativeai as genai
 
 load_dotenv()
-
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-client = genai.Client(api_key=GEMINI_API_KEY)
-
+genai.configure(api_key=GEMINI_API_KEY)
 
 
 app = FastAPI()
@@ -118,3 +118,20 @@ async def generate_path(user_data: UserData):
     profiles = await fetch_similar_profiles(user_data)
     career_path = await generate_career_path(user_data, profiles)
     return {"career_path": career_path}
+
+
+@app.post("/review-resume")
+def review_resume(pdf_path: str):
+    reader = PdfReader(pdf_path)
+    text = ""
+    for page in reader.pages:
+        page_text = page.extract_text()
+        if page_text:
+            text += page_text
+
+    prompt = f"Please review the following resume and provide feedback:\n\n{text}"
+
+    response = genai.GenerativeModel("gemini-2.0-flash").generate_content(prompt)
+
+    return {"review": response.text}
+
