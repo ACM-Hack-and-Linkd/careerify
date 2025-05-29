@@ -1,6 +1,6 @@
 // src/CareerPathGraph.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface CareerNode {
@@ -18,6 +18,14 @@ interface CareerLink {
 interface GraphData {
   nodes: CareerNode[];
   links: CareerLink[];
+}
+
+interface UserData {
+  age: number;
+  education: string;
+  current_title: string;
+  location: string;
+  skills: string[];
 }
 
 const careerPathData: GraphData = {
@@ -217,7 +225,138 @@ const Tooltip = styled.div`
   }
 `;
 
+const Form = styled.form`
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const FormTitle = styled.h2`
+  color: #FF9000;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #FF9000;
+  }
+`;
+
+const SkillsInput = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+`;
+
+const SkillTag = styled.span`
+  background-color: #FF9000;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const RemoveButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background-color: #FF9000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #E67E00;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+`;
+
 const CareerPathTree: React.FC = () => {
+  const [userData, setUserData] = useState<UserData>({
+    age: 0,
+    education: '',
+    current_title: '',
+    location: '',
+    skills: [],
+  });
+  const [currentSkill, setCurrentSkill] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement API call to generate career paths
+    console.log('Submitting user data:', userData);
+  };
+
+  const handleSkillKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && currentSkill.trim()) {
+      e.preventDefault();
+      if (!userData.skills.includes(currentSkill.trim())) {
+        setUserData(prev => ({
+          ...prev,
+          skills: [...prev.skills, currentSkill.trim()]
+        }));
+      }
+      setCurrentSkill('');
+    }
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setUserData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }));
+  };
+
   // Group nodes by level
   const nodesByLevel = careerPathData.nodes.reduce((acc, node) => {
     if (!acc[node.level]) {
@@ -235,6 +374,82 @@ const CareerPathTree: React.FC = () => {
   return (
     <Container>
       <Title>Career Path Tree</Title>
+      
+      <Form onSubmit={handleSubmit}>
+        <FormTitle>Generate Your Career Path</FormTitle>
+        
+        <FormGroup>
+          <Label htmlFor="age">Age</Label>
+          <Input
+            type="number"
+            id="age"
+            value={userData.age || ''}
+            onChange={(e) => setUserData(prev => ({ ...prev, age: parseInt(e.target.value) || 0 }))}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="education">Education</Label>
+          <Input
+            type="text"
+            id="education"
+            value={userData.education}
+            onChange={(e) => setUserData(prev => ({ ...prev, education: e.target.value }))}
+            placeholder="e.g., Bachelor's in Computer Science"
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="current_title">Current Title</Label>
+          <Input
+            type="text"
+            id="current_title"
+            value={userData.current_title}
+            onChange={(e) => setUserData(prev => ({ ...prev, current_title: e.target.value }))}
+            placeholder="e.g., Junior Software Engineer"
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="location">Location</Label>
+          <Input
+            type="text"
+            id="location"
+            value={userData.location}
+            onChange={(e) => setUserData(prev => ({ ...prev, location: e.target.value }))}
+            placeholder="e.g., San Francisco, CA"
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="skills">Skills (Press Enter to add)</Label>
+          <Input
+            type="text"
+            id="skills"
+            value={currentSkill}
+            onChange={(e) => setCurrentSkill(e.target.value)}
+            onKeyPress={handleSkillKeyPress}
+            placeholder="e.g., Python, React, Machine Learning"
+          />
+          <SkillsInput>
+            {userData.skills.map((skill, index) => (
+              <SkillTag key={index}>
+                {skill}
+                <RemoveButton onClick={() => removeSkill(skill)}>&times;</RemoveButton>
+              </SkillTag>
+            ))}
+          </SkillsInput>
+        </FormGroup>
+
+        <SubmitButton type="submit">
+          Generate Career Paths
+        </SubmitButton>
+      </Form>
+
       <TreeContainer>
         {levels.map((level) => (
           <Level key={level}>
