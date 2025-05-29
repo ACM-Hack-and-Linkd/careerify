@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request, Response, Depends, HTTPException
+from fastapi import FastAPI, Request, Response, Depends, HTTPException, UploadFile, File
+import shutil
 from fastapi.middleware.cors import CORSMiddleware
 from auth_utils import set_auth_cookies, clear_auth_cookies, get_current_user
 from db import supabase
@@ -118,6 +119,13 @@ async def generate_path(user_data: UserData):
     profiles = await fetch_similar_profiles(user_data)
     career_path = await generate_career_path(user_data, profiles)
     return {"career_path": career_path}
+
+@app.post("/upload-resume")
+def upload(file: UploadFile = File(...)):
+   file_path = file.filename
+   with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+   return {"message": "Uploaded", "filename": file.filename}
 
 
 @app.post("/review-resume")
