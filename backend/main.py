@@ -12,11 +12,12 @@ from dotenv import load_dotenv
 import os
 import google.generativeai as genai
 from db import add_career_path
+import re
 
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash-preview-05-20")
 
 app = FastAPI()
 app.add_middleware(
@@ -214,12 +215,14 @@ async def generate_career_path(user_data: UserData, profiles: dict):
 
     except Exception as e:
         print("Gemini SDK Error:", str(e))
-        raise HTTPException(status_code=500, detail=f"Gemini API failed")
+        raise HTTPException(status_code=500, detail=str(e))
     
     entry_id, _ = await(add_career_path(user_data, response.text))
+
+    print(f"{response.text}")
     return {
     "entry_id": entry_id,
-    "career_path": response.text
+    "career_path": re.sub(r'^```|```$', '', response.text)
     }
   
 @app.post("/generate-career-path")
