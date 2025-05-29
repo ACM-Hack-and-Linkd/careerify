@@ -1,6 +1,23 @@
 import { AuthRequestBody, AuthResponse, RequestMethod, ResponseBody } from './definitions';
 import { redirect } from 'next/navigation';
 
+export type QuizResults = {
+  roles: string[],
+  companies: string[],
+  locations: string[],
+  educationLevel: string,
+  experienceLevel: string,
+  college: string,
+  hobbies: string[],
+  limit: number,
+}
+
+// Send quiz results to backend and receive a list of profiles
+// I'm not sure what a profile looks like so the type is any
+const sendQuizResults = (results: QuizResults): any[] => {
+  return ["hi"];
+}
+
 export async function getUser(cookieHeader: string): Promise<number> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/me`, {
     method: 'GET',
