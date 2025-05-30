@@ -14,7 +14,7 @@ const NetworkCard: React.FC<profileCard> = ({name, email, company, bio, job_titl
     }
     return(
         <div className="profile-card">
-            <Image src={image_src} alt="profile image" width={230} height={230} className='profile-image'/>
+            <img src={image_src} alt="profile image" width={230} height={230} className='profile-image' onError={(e) => e.currentTarget.src = '/images/profile_template.png'}/>
             <h2 className="profile-card-title">{name}</h2>
             <div className="prof-line">&nbsp;</div>
             <h4 className="profile-card-info">{job}</h4>
