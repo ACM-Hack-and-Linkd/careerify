@@ -6,6 +6,15 @@ import { profileCard } from '../../types/profile'
 import '../../styles/Matching.css'
 import SideBar from '@/components/sideBar';
 
+export type Profile = {
+  name: string,
+  email: string,
+  company: string,
+  job_title: string,
+  bio: string,
+  image_src: string,
+};
+
 const MatchingPage: React.FC = () => {
 
     const [profIndex, setProfIndex] = useState(0);
@@ -38,7 +47,7 @@ const MatchingPage: React.FC = () => {
       image_src: '/icons/prof.svg'
     };
 
-    const dummyData = [dummyData1, dummyData2, dummyData3];
+    const dummyData: Profile[] = JSON.parse(localStorage.getItem("profiles") ?? "");
 
 
     const handleClick = () => {

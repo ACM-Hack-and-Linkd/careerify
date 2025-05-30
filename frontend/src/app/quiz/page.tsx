@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { FormData, FormStep } from '../../types/form';
 import SideBar from '@/components/sideBar';
 import '../../styles/Form.css';
+import { QuizResults, sendQuizResults } from '../lib/api';
+import { Profile } from '../matching/page';
+import { redirect } from 'next/navigation';
 
 const steps = [
   'Personal Information',
@@ -93,8 +96,31 @@ const MultiStepFormPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateStep(currentStep)) {
+      const results: QuizResults = {
+        roles: [formData.occupation],
+        companies: ["any"],
+        locations: [formData.preferredWorkLocation],
+        education_level: formData.education,
+        experience_level: formData.yearsOfExperience + " years",
+        college: formData.education,
+        hobbies: [formData.additionalInfo || "any"],
+        limit: 10,
+      };
+      console.log(results);
+      sendQuizResults(results).then(json => {
+        console.log(json);
+        const profiles: Profile[] = json.map(v => ({
+          name: v.profile.name as string || "No Name",
+          email: v.profile.linkedin_url as string || "none",
+          company: v.experience[0]?.company_name as string || "none",
+          job_title: v.experience[0]?.title as string || "none",
+          bio: v.profile.description as string || "No description",
+          image_src: v.profile.profile_picture_url as string || '/images/profile_template.png',
+        }));
+        localStorage.setItem("profiles", JSON.stringify(profiles));
+        redirect("/matching");
+      });
       console.log('Form submitted:', formData);
-      // Handle form submission here
     }
   };
 
